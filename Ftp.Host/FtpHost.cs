@@ -17,41 +17,20 @@ namespace Ftp.Host;
 /// Creates a new <see cref="FtpHost"/> instance with the specified authenticator.
 /// </summary>
 /// <param name="authenticator">An FTP authenticator which manages user identities.</param>
-public class FtpHost() : BaseServerHost
+public class FtpHost : BaseServerHost
 {
-    private bool _disposedValue;
+    public FtpHost(IEnumerable<FtpCommandBase> commandSet)
+    {
+        _indexedCommandSet = new Dictionary<string, FtpCommandBase>(
+            commandSet.Select(x => new KeyValuePair<string, FtpCommandBase>(x.CommandName.ToLowerInvariant(), x)));
+    }
 
-    /// <summary>
-    /// The default list of FTP commands to use when instantiating new instances of <see cref="ExtensibleFtpServer"/>.  It contains all the basic commands necessary for FTP transactions.
-    /// TODO: Add keyed registering
-    /// </summary>
-    public static List<FtpCommandBase> DefaultCommandSet =
-    [
-        new CwdCommand(),
-        new DeleCommand(),
-        new ListCommand(),
-        new MkdCommand(),
-        new NoOpCommand(),
-        new PassCommand(),
-        new PasvCommand(),
-        new PortCommand(),
-        new PwdCommand(),
-        new QuitCommand(),
-        new RetrCommand(),
-        new RmdaCommand(),
-        new RmdCommand(),
-        new RnfrCommand(),
-        new RntoCommand(),
-        new SizeCommand(),
-        new StorCommand(),
-        new TypeCommand(),
-        new UserCommand()
-    ];
+    private bool _disposedValue;
 
     public IFtpAuthenticator Authenticator { get; private set; }
 
-    private readonly Dictionary<string, FtpCommandBase> _indexedCommandSet = new(
-        DefaultCommandSet.Select(x => new KeyValuePair<string, FtpCommandBase>(x.CommandName.ToLowerInvariant(), x)));
+    private readonly Dictionary<string, FtpCommandBase> _indexedCommandSet;
+        
     private SynchronizedCollection<FtpConnection> _connections = [];
     private TcpListener _controlServer;
     private static readonly object Locker = new();
@@ -65,6 +44,26 @@ public class FtpHost() : BaseServerHost
         builder.RegisterModule<LoggerModule>();
         builder.RegisterModule<DefaultIdentityModule>();
         builder.RegisterModule<StorageAccountModule>();
+
+        builder.RegisterType<CwdCommand>().As<FtpCommandBase>().SingleInstance();
+        builder.RegisterType<DeleCommand>().As<FtpCommandBase>().SingleInstance();
+        builder.RegisterType<ListCommand>().As<FtpCommandBase>().SingleInstance();
+        builder.RegisterType<MkdCommand>().As<FtpCommandBase>().SingleInstance();
+        builder.RegisterType<NoOpCommand>().As<FtpCommandBase>().SingleInstance();
+        builder.RegisterType<PassCommand>().As<FtpCommandBase>().SingleInstance();
+        builder.RegisterType<PasvCommand>().As<FtpCommandBase>().SingleInstance();
+        builder.RegisterType<PortCommand>().As<FtpCommandBase>().SingleInstance();
+        builder.RegisterType<PwdCommand>().As<FtpCommandBase>().SingleInstance();
+        builder.RegisterType<QuitCommand>().As<FtpCommandBase>().SingleInstance();
+        builder.RegisterType<RetrCommand>().As<FtpCommandBase>().SingleInstance();
+        builder.RegisterType<RmdaCommand>().As<FtpCommandBase>().SingleInstance();
+        builder.RegisterType<RmdCommand>().As<FtpCommandBase>().SingleInstance();
+        builder.RegisterType<RnfrCommand>().As<FtpCommandBase>().SingleInstance();
+        builder.RegisterType<RntoCommand>().As<FtpCommandBase>().SingleInstance();
+        builder.RegisterType<SizeCommand>().As<FtpCommandBase>().SingleInstance();
+        builder.RegisterType<StorCommand>().As<FtpCommandBase>().SingleInstance();
+        builder.RegisterType<TypeCommand>().As<FtpCommandBase>().SingleInstance();
+        builder.RegisterType<UserCommand>().As<FtpCommandBase>().SingleInstance();
 
         return builder;
     }

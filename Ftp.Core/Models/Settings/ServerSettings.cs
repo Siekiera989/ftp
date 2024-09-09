@@ -4,14 +4,17 @@ namespace Ftp.Core.Models.Settings;
 
 public class ServerSettings : IServerSettings
 {
-    public int Port { get; set; }
+    public int Port { get; }
+
+    public string PassivePortsRange { get; }
 
     public ServerSettings()
     {
     }
 
-    public ServerSettings(int port)
+    public ServerSettings(int port, string passivePortRange)
     {
         Port = port;
+        PassivePortsRange = passivePortRange;
     }
 }

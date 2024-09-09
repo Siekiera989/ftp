@@ -2,5 +2,5 @@
 
 public interface IServerSettings
 {
-    int Port { get; set; }
+    int Port { get; }
 }

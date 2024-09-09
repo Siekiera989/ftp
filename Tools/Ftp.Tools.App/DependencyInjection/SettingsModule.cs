@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Ftp.Core.Interfaces.Settings;
 using Ftp.Core.Models.Settings;
 using Ftp.Tools.App.Extensions;
 using Microsoft.Extensions.Configuration;
@@ -22,9 +23,11 @@ public class SettingsModule : Module
 
         var loggerSettings = config.GetSettings<LoggerSettings>();
         var storageAccountSettings = config.GetSettings<StorageAccountSettings>();
+        var passiveConnectionSettings = config.GetSettings<PassiveConnectionSettings>();
 
         builder.Register(x => x.Resolve<IConfigurationRoot>().GetSettings<ServerSettings>()).AsImplementedInterfaces();
         builder.Register(x => loggerSettings).AsImplementedInterfaces();
         builder.Register(x => storageAccountSettings).AsImplementedInterfaces();
+        builder.Register(x => passiveConnectionSettings).AsImplementedInterfaces();
     }
 }

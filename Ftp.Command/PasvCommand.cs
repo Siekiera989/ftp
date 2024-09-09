@@ -1,20 +1,29 @@
 ﻿using System.Net;
 using Ftp.Command.Abstract;
 using Ftp.Core.Connection;
-using Ftp.Core.Identity;
+using Ftp.Core.Factory;
 
 namespace Ftp.Command;
 
 public class PasvCommand : FtpCommandBase
 {
+    private readonly IPasvConnectionFactory _pasvConnectionFactory;
+
+    public PasvCommand(IPasvConnectionFactory pasvConnectionFactory)
+    {
+        _pasvConnectionFactory = pasvConnectionFactory;
+    }
+
     public override string CommandName => "PASV";
 
     public override void Execute(FtpConnectionBase user, string arguments)
     {
         user.DataClient?.Dispose();
-        PassiveDataConnector connection = new();
+        var localAddress = (user.ControlClient.Client.LocalEndPoint as IPEndPoint).Address;
+        PassiveDataConnector connection = _pasvConnectionFactory.CreatePassiveDataConnector(localAddress);
+
         user.DataClient = connection;
-        byte[] address = ((IPEndPoint)user.ControlClient.Client.LocalEndPoint).Address.GetAddressBytes();
+        byte[] address = localAddress.GetAddressBytes();
         byte[] port = BitConverter.GetBytes((short)((IPEndPoint)connection.DataListener.LocalEndpoint).Port);
         if (BitConverter.IsLittleEndian)
         {

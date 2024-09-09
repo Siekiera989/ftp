@@ -2,5 +2,5 @@
 
 public interface IStorageAccountSettings
 {
-    string FirmwareStorageAccountConnectionString { get; set; }
+    string FirmwareStorageAccountConnectionString { get; }
 }

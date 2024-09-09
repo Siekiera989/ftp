@@ -13,5 +13,5 @@ public class StorageAccountSettings : IStorageAccountSettings
         FirmwareStorageAccountConnectionString = firmwareStorageAccountConnectionString;
     }
 
-    public string FirmwareStorageAccountConnectionString { get; set; }
+    public string FirmwareStorageAccountConnectionString { get; }
 }

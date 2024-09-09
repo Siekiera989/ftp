@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.Sockets;
+using Ftp.Core.Interfaces.Settings;
 
 namespace Ftp.Core.Connection;
 
@@ -11,13 +12,11 @@ public class PassiveDataConnector : IDataConnector
     /// <summary>
     /// The current <see cref="TcpListener"/> used to listen for incoming passive data connections.
     /// </summary>
-    public TcpListener DataListener = new(IPAddress.Any, 0);
+    public TcpListener DataListener;
 
-    /// <summary>
-    /// Creates a new passive data connector, starting a <see cref="TcpListener"/> to manage data connections in the process.
-    /// </summary>
-    public PassiveDataConnector()
-    {
+    public PassiveDataConnector(IPAddress address, int port)
+    { 
+        DataListener = new TcpListener(address, port);
         DataListener.Start();
     }
 
