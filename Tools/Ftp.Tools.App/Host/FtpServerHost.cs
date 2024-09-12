@@ -1,8 +1,8 @@
 ﻿using Autofac;
+using Ftp.Core.DependencyInjection;
 using Ftp.Core.Interfaces;
 using Ftp.Core.Models;
 using Ftp.Host;
-using Ftp.Tools.App.DependencyInjection;
 
 namespace Ftp.Tools.App.Host;
 
@@ -24,8 +24,6 @@ public class FtpServerHost : BaseServerHost
             ProjectName = "FTP Server"
         }).As<IServiceInstanceContext>().SingleInstance();
 
-        builder.RegisterModule<SettingsModule>();
-
         Container = builder.Build();
     }
 
@@ -34,3 +32,4 @@ public class FtpServerHost : BaseServerHost
         await ServerHost.Run(Container, token).ConfigureAwait(false);
     }
 }
+    

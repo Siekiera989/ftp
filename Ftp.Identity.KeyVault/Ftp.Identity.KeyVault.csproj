@@ -6,8 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Ftp.Core\Ftp.Core.csproj" />
-  </ItemGroup>
-
 </Project>

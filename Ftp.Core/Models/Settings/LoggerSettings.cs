@@ -5,6 +5,9 @@ namespace Ftp.Core.Models.Settings;
 
 public class LoggerSettings : ILoggerSettings
 {
+    public string AppInsightsConnectionString { get; set; }
+    public LogEventLevel LogLevel { get; set; }
+
     public LoggerSettings()
     {
     }
@@ -14,7 +17,4 @@ public class LoggerSettings : ILoggerSettings
         AppInsightsConnectionString = appInsightsConnectionString;
         LogLevel = logLevel;
     }
-
-    public string AppInsightsConnectionString { get; set; }
-    public LogEventLevel LogLevel { get; set; }
 }

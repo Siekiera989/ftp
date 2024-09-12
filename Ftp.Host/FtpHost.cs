@@ -10,6 +10,7 @@ using Ftp.FileSystem.AzureStorageAccount.DependencyInjection;
 using Ftp.Command.Abstract;
 using Ftp.Command;
 using Ftp.Identity.Default;
+using Ftp.Command.DependencyInjection;
 
 namespace Ftp.Host;
 
@@ -19,17 +20,11 @@ namespace Ftp.Host;
 /// <param name="authenticator">An FTP authenticator which manages user identities.</param>
 public class FtpHost : BaseServerHost
 {
-    public FtpHost(IEnumerable<FtpCommandBase> commandSet)
-    {
-        _indexedCommandSet = new Dictionary<string, FtpCommandBase>(
-            commandSet.Select(x => new KeyValuePair<string, FtpCommandBase>(x.CommandName.ToLowerInvariant(), x)));
-    }
-
     private bool _disposedValue;
 
     public IFtpAuthenticator Authenticator { get; private set; }
 
-    private readonly Dictionary<string, FtpCommandBase> _indexedCommandSet;
+    private Dictionary<string, FtpCommandBase> _indexedCommandSet;
         
     private SynchronizedCollection<FtpConnection> _connections = [];
     private TcpListener _controlServer;
@@ -41,29 +36,11 @@ public class FtpHost : BaseServerHost
     public override ContainerBuilder InitializeContainer()
     {
         var builder = new ContainerBuilder();
-        builder.RegisterModule<LoggerModule>();
-        builder.RegisterModule<DefaultIdentityModule>();
-        builder.RegisterModule<StorageAccountModule>();
 
-        builder.RegisterType<CwdCommand>().As<FtpCommandBase>().SingleInstance();
-        builder.RegisterType<DeleCommand>().As<FtpCommandBase>().SingleInstance();
-        builder.RegisterType<ListCommand>().As<FtpCommandBase>().SingleInstance();
-        builder.RegisterType<MkdCommand>().As<FtpCommandBase>().SingleInstance();
-        builder.RegisterType<NoOpCommand>().As<FtpCommandBase>().SingleInstance();
-        builder.RegisterType<PassCommand>().As<FtpCommandBase>().SingleInstance();
-        builder.RegisterType<PasvCommand>().As<FtpCommandBase>().SingleInstance();
-        builder.RegisterType<PortCommand>().As<FtpCommandBase>().SingleInstance();
-        builder.RegisterType<PwdCommand>().As<FtpCommandBase>().SingleInstance();
-        builder.RegisterType<QuitCommand>().As<FtpCommandBase>().SingleInstance();
-        builder.RegisterType<RetrCommand>().As<FtpCommandBase>().SingleInstance();
-        builder.RegisterType<RmdaCommand>().As<FtpCommandBase>().SingleInstance();
-        builder.RegisterType<RmdCommand>().As<FtpCommandBase>().SingleInstance();
-        builder.RegisterType<RnfrCommand>().As<FtpCommandBase>().SingleInstance();
-        builder.RegisterType<RntoCommand>().As<FtpCommandBase>().SingleInstance();
-        builder.RegisterType<SizeCommand>().As<FtpCommandBase>().SingleInstance();
-        builder.RegisterType<StorCommand>().As<FtpCommandBase>().SingleInstance();
-        builder.RegisterType<TypeCommand>().As<FtpCommandBase>().SingleInstance();
-        builder.RegisterType<UserCommand>().As<FtpCommandBase>().SingleInstance();
+        builder.RegisterCoreModule();
+        builder.RegisterModule<StorageAccountModule>();
+        builder.RegisterModule<DefaultIdentityModule>();
+        builder.RegisterModule<CommandModule>();
 
         return builder;
     }
@@ -87,14 +64,22 @@ public class FtpHost : BaseServerHost
         if (_controlServer != null)
         {
             ConfigureServer(container);
+            InitializeCommandSet(container);
             _controlServer.Start();
-            await AcceptNewClientsAsync();
             Logger.Information("[{scope}] Server stared on port: [{port}]", nameof(FtpHost), serverSettings.Port);
+            await AcceptNewClientsAsync();
         }
         else
         {
             Logger.Error("[{scope}] Cannot start server", nameof(FtpHost));
         }
+    }
+
+    private void InitializeCommandSet(IContainer container)
+    {
+        var commandSet = container.Resolve<IEnumerable<FtpCommandBase>>();
+        _indexedCommandSet = new Dictionary<string, FtpCommandBase>(
+            commandSet.Select(x => new KeyValuePair<string, FtpCommandBase>(x.CommandName.ToLowerInvariant(), x)));
     }
 
 

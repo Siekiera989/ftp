@@ -1,4 +1,6 @@
-﻿using Ftp.Core.Enums;
+﻿using Autofac;
+using Ftp.Core.DependencyInjection;
+using Ftp.Core.Enums;
 using Ftp.Core.Extensions;
 using Ftp.Tools.App.Host;
 
@@ -14,13 +16,7 @@ internal class Program
 
         var host = new FtpServerHost();
 
-        var serversTasks = Task.WhenAll(RunServer(host, cts.Token));
-
-        await Task.Delay(6000, cts.Token);
-
-        Console.WriteLine("Hook instances");
-
-        await serversTasks;
+        await RunServer(host, cts.Token);
 
         Console.WriteLine("Press Q and ENTER key to exit");
 

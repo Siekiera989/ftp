@@ -4,6 +4,8 @@ namespace Ftp.Core.Models.Settings;
 
 public class StorageAccountSettings : IStorageAccountSettings
 {
+    public string FirmwareStorageAccountConnectionString { get; set; }
+
     public StorageAccountSettings()
     {            
     }
@@ -12,6 +14,4 @@ public class StorageAccountSettings : IStorageAccountSettings
     {
         FirmwareStorageAccountConnectionString = firmwareStorageAccountConnectionString;
     }
-
-    public string FirmwareStorageAccountConnectionString { get; }
 }

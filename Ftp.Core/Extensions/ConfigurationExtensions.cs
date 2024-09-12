@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 
-namespace Ftp.Tools.App.Extensions;
+namespace Ftp.Core.Extensions;
 
 public static class ConfigurationExtensions
 {

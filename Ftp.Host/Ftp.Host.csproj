@@ -6,11 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="8.0.0" />
-    <PackageReference Include="Serilog" Version="3.1.1" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Ftp.Command\Ftp.Command.csproj" />
     <ProjectReference Include="..\Ftp.Core\Ftp.Core.csproj" />
     <ProjectReference Include="..\Ftp.FileSystem.AzureStorageAccount\Ftp.FileSystem.AzureStorageAccount.csproj" />
