@@ -2,11 +2,10 @@
 using Ftp.Command.Abstract;
 using Ftp.Core.Connection;
 using Ftp.Core.Exceptions;
-using Serilog;
 
 namespace Ftp.Command;
 
-public class DeleCommand(ILogger logger) : FtpCommandBase(logger)
+public class DeleCommand() : FtpCommandBase()
 {
     public override string CommandName => "DELE";
 
@@ -16,13 +15,11 @@ public class DeleCommand(ILogger logger) : FtpCommandBase(logger)
         if (user.Filesystem.FileExists(path))
         {
             user.Filesystem.DeleteFile(path);
-            LogInformation(FtpStatusCode.FileActionOK, "File deleted successfully.");
-            user.SendResponse(FtpStatusCode.FileActionOK, "File deleted successfully.");
+            user.SendResponse(FtpStatusCode.FileActionOK, $"File deleted successfully.", CommandName);
         }
         else
         {
-            LogError(FtpStatusCode.ActionNotTakenFileUnavailable, "File does not exist.");
-            throw new FtpException(FtpStatusCode.ActionNotTakenFileUnavailable, "File does not exist.");
+            throw new FtpException(FtpStatusCode.ActionNotTakenFileUnavailable, $"[{CommandName}] File does not exist.");
         }
     }
 }

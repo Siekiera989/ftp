@@ -1,6 +1,4 @@
-﻿using System.Net;
-using Ftp.Core.Connection;
-using Serilog;
+﻿using Ftp.Core.Connection;
 
 namespace Ftp.Command.Abstract;
 
@@ -9,12 +7,8 @@ namespace Ftp.Command.Abstract;
 /// </summary>
 public abstract class FtpCommandBase
 {
-    public ILogger Logger { get; }
-
-    protected FtpCommandBase(ILogger logger)
+    protected FtpCommandBase()
     {
-        Logger = logger;
-        Logger = Log.ForContext(GetType());
     }
 
     /// <summary>
@@ -28,19 +22,4 @@ public abstract class FtpCommandBase
     /// <param name="connection">The user who made the request.</param>
     /// <param name="arguments">Any extra data that the user sent along with the name of the request.</param>
     public abstract void Execute(FtpConnectionBase connection, string arguments);
-
-    protected void LogInformation(FtpStatusCode statusCode, string message)
-    {
-        Logger.Information($"[{statusCode}][{message}]");
-    }
-
-    protected void LogWarning(FtpStatusCode statusCode, string message)
-    {
-        Logger.Warning($"[{statusCode}][{message}]");
-    }
-
-    protected void LogError(FtpStatusCode statusCode, string message)
-    {
-        Logger.Error($"[{statusCode}][{message}]");
-    }
 }

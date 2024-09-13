@@ -5,11 +5,10 @@ using Ftp.Command.Abstract;
 using Ftp.Core.Connection;
 using Ftp.Core.Exceptions;
 using Ftp.Core.FileSystem;
-using Serilog;
 
 namespace Ftp.Command;
 
-public class ListCommand(ILogger logger) : FtpCommandBase(logger)
+public class ListCommand() : FtpCommandBase()
 {
     public override string CommandName => "LIST";
 
@@ -21,12 +20,10 @@ public class ListCommand(ILogger logger) : FtpCommandBase(logger)
         if (user.Filesystem.DirectoryExists(pathname))
         {
             ExecuteAsync(user, pathname);
-            Logger.Information("[{Command}][{FtpStatusCode}] Opening {dataClient} mode data transfer for LIST", CommandName, FtpStatusCode.OpeningData, user.DataClient);
-            user.SendResponse(FtpStatusCode.OpeningData, $"Opening {user.DataClient} mode data transfer for LIST");
+            user.SendResponse(FtpStatusCode.OpeningData, $"Opening {user.DataClient} mode data transfer for LIST", CommandName);
         }
         else
         {
-            LogError(FtpStatusCode.ActionNotTakenFileUnavailable, "Requested file action not taken.");
             throw new FtpException(FtpStatusCode.ActionNotTakenFileUnavailable, "Requested file action not taken.");
         }
     }
@@ -61,7 +58,6 @@ public class ListCommand(ILogger logger) : FtpCommandBase(logger)
                 writer.Flush();
             }
         }
-        LogInformation(FtpStatusCode.ClosingData, "Transfer complete.");
-        user.SendResponse(FtpStatusCode.ClosingData, "Transfer complete.");
+        user.SendResponse(FtpStatusCode.ClosingData, $"Transfer complete.", CommandName);
     }
 }

@@ -8,8 +8,6 @@ namespace Ftp.Core.Connection;
 
 public abstract class FtpConnectionBase
 {
-
-
     /// <summary>
     /// An object which contains data put there by the last command used.  Two-part commands, like USER and PASS, use this object to pass data between each other.
     /// </summary>
@@ -51,14 +49,14 @@ public abstract class FtpConnectionBase
     /// </summary>
     /// <param name="code">The FTP status code to send.</param>
     /// <param name="data">The message to send along with the status code.</param>
-    public abstract void SendResponse(FtpStatusCode code, string data);
+    public abstract void SendResponse(FtpStatusCode code, string data, string commandType);
 
     /// <summary>
     /// Sends an FTP response to the client.  FTP responses consist of a status code and a single-line message.
     /// </summary>
     /// <param name="code">The FTP status code to send.</param>
     /// <param name="data">The message to send along with the status code.</param>
-    public abstract void SendResponse(int code, string data);
+    public abstract void SendResponse(int code, string data, string commandType);
 
     public abstract Task Start();
 

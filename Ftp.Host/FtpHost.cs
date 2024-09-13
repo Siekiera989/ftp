@@ -114,7 +114,7 @@ public class FtpHost : BaseServerHost
     {
         while (_controlServer != null)
         {
-            FtpConnection connection = new(this, await _controlServer.AcceptTcpClientAsync());
+            FtpConnection connection = new(this, await _controlServer.AcceptTcpClientAsync(), Logger);
             _connections.Add(connection);
             await connection.Start();
         }

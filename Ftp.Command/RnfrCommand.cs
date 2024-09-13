@@ -2,11 +2,10 @@
 using Ftp.Command.Abstract;
 using Ftp.Core.Connection;
 using Ftp.Core.Exceptions;
-using Serilog;
 
 namespace Ftp.Command;
 
-public class RnfrCommand(ILogger logger) : FtpCommandBase(logger)
+public class RnfrCommand() : FtpCommandBase()
 {
     public override string CommandName => "RNFR";
 
@@ -16,13 +15,11 @@ public class RnfrCommand(ILogger logger) : FtpCommandBase(logger)
         if (user.Filesystem.FileExists(path) || user.Filesystem.DirectoryExists(path))
         {
             user.LastCommandData = path;
-            user.SendResponse(FtpStatusCode.FileCommandPending, "Item selected.  New item name needed.");
-            LogInformation(FtpStatusCode.FileCommandPending, "Item selected.  New item name needed.");
+            user.SendResponse(FtpStatusCode.FileCommandPending, "Item selected. New item name needed.", CommandName);
         }
         else
         {
-            LogError(FtpStatusCode.ActionNotTakenFileUnavailable, "No item exists under that name.");
-            throw new FtpException(FtpStatusCode.ActionNotTakenFileUnavailable, "No item exists under that name.");
+            throw new FtpException(FtpStatusCode.ActionNotTakenFileUnavailable, $"[{CommandName}] No item exists under that name.");
         }
     }
 }

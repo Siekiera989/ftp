@@ -1,11 +1,10 @@
 ﻿using System.Net;
 using Ftp.Command.Abstract;
 using Ftp.Core.Connection;
-using Serilog;
 
 namespace Ftp.Command;
 
-public class PortCommand(ILogger logger) : FtpCommandBase(logger)
+public class PortCommand() : FtpCommandBase()
 {
     public override string CommandName => "PORT";
 
@@ -25,7 +24,6 @@ public class PortCommand(ILogger logger) : FtpCommandBase(logger)
         }
         user.DataClient?.Dispose();
         user.DataClient = new ActiveDataConnector(new IPEndPoint(new IPAddress(portData[0..3]), BitConverter.ToInt16(portData[4..5])));
-        user.SendResponse(FtpStatusCode.CommandOK, "Entered active mode.");
-        LogInformation(FtpStatusCode.CommandOK, "Entered active mode.");
+        user.SendResponse(FtpStatusCode.CommandOK, $"Entered active mode.", CommandName);
     }
 }
