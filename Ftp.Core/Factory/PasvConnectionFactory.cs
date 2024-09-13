@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using Ftp.Core.Connection;
 using Ftp.Core.Interfaces.Settings;

@@ -1,16 +1,18 @@
-﻿using Ftp.Command.Abstract;
+﻿using System.Net;
+using Ftp.Command.Abstract;
 using Ftp.Core.Connection;
-using Ftp.Core.Identity;
+using Serilog;
 
 namespace Ftp.Command;
 
-public class UserCommand : FtpCommandBase
+public class UserCommand(ILogger logger) : FtpCommandBase(logger)
 {
     public override string CommandName => "USER";
 
     public override void Execute(FtpConnectionBase user, string arguments)
     {
         user.LastCommandData = arguments;
-        user.SendResponse(331, "Username ok, need password");
+        user.SendResponse(FtpStatusCode.SendPasswordCommand, "Username ok, need password");
+        LogInformation(FtpStatusCode.SendPasswordCommand, "Username ok, need password");
     }
 }

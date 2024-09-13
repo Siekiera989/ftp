@@ -2,17 +2,13 @@
 using Ftp.Command.Abstract;
 using Ftp.Core.Connection;
 using Ftp.Core.Factory;
+using Serilog;
 
 namespace Ftp.Command;
 
-public class PasvCommand : FtpCommandBase
+public class PasvCommand(IPasvConnectionFactory pasvConnectionFactory, ILogger logger) : FtpCommandBase(logger)
 {
-    private readonly IPasvConnectionFactory _pasvConnectionFactory;
-
-    public PasvCommand(IPasvConnectionFactory pasvConnectionFactory)
-    {
-        _pasvConnectionFactory = pasvConnectionFactory;
-    }
+    private readonly IPasvConnectionFactory _pasvConnectionFactory = pasvConnectionFactory;
 
     public override string CommandName => "PASV";
 
@@ -30,5 +26,6 @@ public class PasvCommand : FtpCommandBase
             Array.Reverse(port);
         }
         user.SendResponse(FtpStatusCode.EnteringPassive, $"Entering Passive Mode ({address[0]},{address[1]},{address[2]},{address[3]},{port[0]},{port[1]})");
+        LogInformation(FtpStatusCode.EnteringPassive, $"Entering Passive Mode ({address[0]},{address[1]},{address[2]},{address[3]},{port[0]},{port[1]})");
     }
 }

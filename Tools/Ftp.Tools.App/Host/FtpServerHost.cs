@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using Ftp.Core.DependencyInjection;
 using Ftp.Core.Interfaces;
 using Ftp.Core.Models;
 using Ftp.Host;

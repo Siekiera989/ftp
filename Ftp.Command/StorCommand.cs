@@ -5,11 +5,11 @@ using Ftp.Command.Abstract;
 using Ftp.Core.Connection;
 using Ftp.Core.Enums;
 using Ftp.Core.Exceptions;
-using Ftp.Core.Identity;
+using Serilog;
 
 namespace Ftp.Command;
 
-public class StorCommand : FtpCommandBase
+public class StorCommand(ILogger logger) : FtpCommandBase(logger)
 {
     public override string CommandName => "STOR";
 
@@ -20,14 +20,16 @@ public class StorCommand : FtpCommandBase
         {
             ExecuteAsync(user, arguments);
             user.SendResponse(FtpStatusCode.OpeningData, $"Opening {user.DataClient} mode data transfer for STOR");
+            LogInformation(FtpStatusCode.OpeningData, $"Opening {user.DataClient} mode data transfer for STOR");
         }
         else
         {
+            LogError(FtpStatusCode.ActionNotTakenFileUnavailable, "Requested file action not taken.");
             throw new FtpException(FtpStatusCode.ActionNotTakenFileUnavailable, "Requested file action not taken.");
         }
     }
 
-    private static async Task ExecuteAsync(FtpConnectionBase user, string path)
+    private async Task ExecuteAsync(FtpConnectionBase user, string path)
     {
         using TcpClient client = await user.DataClient.CreateDataConnectionAsync();
         using MemoryStream stream = new();
@@ -36,14 +38,17 @@ public class StorCommand : FtpCommandBase
             await CopyStreamAsciiAsync(client.GetStream(), stream, 81920);
             await user.Filesystem.CreateFile(path, stream);
             user.SendResponse(FtpStatusCode.ClosingData, "Closing data connection, file transfer successful.");
+            LogInformation(FtpStatusCode.ClosingData, "Closing data connection, file transfer successful.");
         }
         else if (user.TransferType == TransferMode.Binary)
         {
             await client.GetStream().CopyToAsync(stream);
             user.SendResponse(FtpStatusCode.ClosingData, "Closing data connection, file transfer successful.");
+            LogInformation(FtpStatusCode.ClosingData, "Closing data connection, file transfer successful.");
         }
         else
         {
+            LogError(FtpStatusCode.CommandNotImplemented, "Unsupported transfer mode.");
             throw new FtpException(FtpStatusCode.CommandNotImplemented, "Unsupported transfer mode.");
         }
     }

@@ -1,5 +1,4 @@
-﻿using System.IO;
-using Azure.Storage.Blobs;
+﻿using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Azure.Storage.Files.DataLake;
 using Ftp.Core.FileSystem;
@@ -98,10 +97,10 @@ public class StorageAccountFileSystem(BlobContainerClient blobContainerClient, D
         
         var directories = paths.Select(x => x.Name).ToArray();
 
-        //for (int i = 0; i < directories.Length; i++)
-        //{
-        //    directories[i] = directories[i].Substring(RootDirectory.Length);
-        //}
+        for (int i = 0; i < directories.Length; i++)
+        {
+            directories[i] = directories[i][RootDirectory.Length..];
+        }
 
         _logger.Information("[{scope}] Successfully finished listing directory: [{directory}]", nameof(StorageAccountFileSystem), path);
 

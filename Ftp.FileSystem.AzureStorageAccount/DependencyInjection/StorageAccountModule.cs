@@ -2,7 +2,6 @@
 using Azure.Storage.Blobs;
 using Azure.Storage.Files.DataLake;
 using Ftp.Core.Interfaces.Settings;
-using Microsoft.ApplicationInsights;
 
 namespace Ftp.FileSystem.AzureStorageAccount.DependencyInjection;
 

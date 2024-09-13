@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using System.Net.Sockets;
-using Ftp.Core.Interfaces.Settings;
 
 namespace Ftp.Core.Connection;
 

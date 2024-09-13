@@ -4,13 +4,12 @@ using Serilog;
 using Autofac;
 using Ftp.Core.Identity;
 using Ftp.Core.Interfaces.Settings;
-using Ftp.Core.DependencyInjection;
 using Ftp.Core.Extensions;
 using Ftp.FileSystem.AzureStorageAccount.DependencyInjection;
 using Ftp.Command.Abstract;
-using Ftp.Command;
 using Ftp.Identity.Default;
 using Ftp.Command.DependencyInjection;
+using Microsoft.ApplicationInsights;
 
 namespace Ftp.Host;
 
@@ -32,6 +31,7 @@ public class FtpHost : BaseServerHost
 
     //protected override TelemetryClient Client { get; set; }
     protected override ILogger Logger { get; set; }
+    public TelemetryClient Client { get; private set; }
 
     public override ContainerBuilder InitializeContainer()
     {

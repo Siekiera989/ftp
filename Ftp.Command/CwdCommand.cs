@@ -2,10 +2,11 @@
 using Ftp.Command.Abstract;
 using Ftp.Core.Connection;
 using Ftp.Core.Exceptions;
+using Serilog;
 
 namespace Ftp.Command;
 
-public class CwdCommand : FtpCommandBase
+public class CwdCommand(ILogger logger) : FtpCommandBase(logger)
 {
     public override string CommandName => "CWD";
 
@@ -14,10 +15,12 @@ public class CwdCommand : FtpCommandBase
         if (user.Filesystem.DirectoryExists(arguments))
         {
             user.CurrentDirectory = arguments;
+            LogInformation(FtpStatusCode.FileActionOK, "Changed to new directory.");
             user.SendResponse(FtpStatusCode.FileActionOK, "Changed to new directory.");
         }
         else
         {
+            LogError(FtpStatusCode.ActionNotTakenFileUnavailable, "Directory not found.");
             throw new FtpException(FtpStatusCode.ActionNotTakenFileUnavailable, "Directory not found.");
         }
     }

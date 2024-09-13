@@ -1,6 +1,4 @@
-﻿using Autofac;
-using Ftp.Core.DependencyInjection;
-using Ftp.Core.Enums;
+﻿using Ftp.Core.Enums;
 using Ftp.Core.Extensions;
 using Ftp.Tools.App.Host;
 

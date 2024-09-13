@@ -3,11 +3,11 @@ using Ftp.Command.Abstract;
 using Ftp.Core.Connection;
 using Ftp.Core.Enums;
 using Ftp.Core.Exceptions;
-using Ftp.Core.Identity;
+using Serilog;
 
 namespace Ftp.Command;
 
-public class TypeCommand : FtpCommandBase
+public class TypeCommand(ILogger logger) : FtpCommandBase(logger)
 {
     public override string CommandName => "TYPE";
 
@@ -36,6 +36,7 @@ public class TypeCommand : FtpCommandBase
             case "E":
             case "L":
             default:
+                LogError(FtpStatusCode.CommandNotImplemented, "Command not implemented for that parameter.");
                 throw new FtpException(FtpStatusCode.CommandNotImplemented, "Command not implemented for that parameter.");
         }
         if (format != null)
@@ -47,9 +48,11 @@ public class TypeCommand : FtpCommandBase
                 case "T":
                 case "C":
                 default:
+                    LogError(FtpStatusCode.CommandNotImplemented, "Command not implemented for that parameter.");
                     throw new FtpException(FtpStatusCode.CommandNotImplemented, "Command not implemented for that parameter.");
             }
         }
         user.SendResponse(FtpStatusCode.CommandOK, "OK");
+        LogInformation(FtpStatusCode.CommandOK, "OK");
     }
 }

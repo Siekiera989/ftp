@@ -2,11 +2,11 @@
 using Ftp.Command.Abstract;
 using Ftp.Core.Connection;
 using Ftp.Core.Exceptions;
-using Ftp.Core.Identity;
+using Serilog;
 
 namespace Ftp.Command;
 
-public class RnfrCommand : FtpCommandBase
+public class RnfrCommand(ILogger logger) : FtpCommandBase(logger)
 {
     public override string CommandName => "RNFR";
 
@@ -17,9 +17,11 @@ public class RnfrCommand : FtpCommandBase
         {
             user.LastCommandData = path;
             user.SendResponse(FtpStatusCode.FileCommandPending, "Item selected.  New item name needed.");
+            LogInformation(FtpStatusCode.FileCommandPending, "Item selected.  New item name needed.");
         }
         else
         {
+            LogError(FtpStatusCode.ActionNotTakenFileUnavailable, "No item exists under that name.");
             throw new FtpException(FtpStatusCode.ActionNotTakenFileUnavailable, "No item exists under that name.");
         }
     }

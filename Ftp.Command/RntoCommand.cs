@@ -1,11 +1,11 @@
 ﻿using System.Net;
 using Ftp.Command.Abstract;
 using Ftp.Core.Connection;
-using Ftp.Core.Identity;
+using Serilog;
 
 namespace Ftp.Command;
 
-public class RntoCommand : FtpCommandBase
+public class RntoCommand(ILogger logger) : FtpCommandBase(logger)
 {
     public override string CommandName => "RNTO";
 
@@ -22,5 +22,6 @@ public class RntoCommand : FtpCommandBase
             user.Filesystem.MoveDirectory(oldPath, newPath);
         }
         user.SendResponse(FtpStatusCode.FileActionOK, "Item moved successfully.");
+        LogInformation(FtpStatusCode.FileActionOK, "Item moved successfully.");
     }
 }
