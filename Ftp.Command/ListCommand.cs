@@ -5,11 +5,10 @@ using Ftp.Command.Abstract;
 using Ftp.Core.Connection;
 using Ftp.Core.Exceptions;
 using Ftp.Core.FileSystem;
-using Serilog;
 
 namespace Ftp.Command;
 
-public class ListCommand(ILogger logger) : FtpCommandBase(logger)
+public class ListCommand() : FtpCommandBase()
 {
     public override string CommandName => "LIST";
 
@@ -17,16 +16,14 @@ public class ListCommand(ILogger logger) : FtpCommandBase(logger)
     {
         pathname ??= "";
 
-        pathname = Path.Combine(user.CurrentDirectory, pathname);
+        pathname = Path.Combine(user.Identity.Username, user.CurrentDirectory, pathname);
         if (user.Filesystem.DirectoryExists(pathname))
         {
             ExecuteAsync(user, pathname);
-            Logger.Information("[{Command}][{FtpStatusCode}] Opening {dataClient} mode data transfer for LIST", CommandName, FtpStatusCode.OpeningData, user.DataClient);
-            user.SendResponse(FtpStatusCode.OpeningData, $"Opening {user.DataClient} mode data transfer for LIST");
+            user.SendResponse(FtpStatusCode.OpeningData, $"Opening {user.DataClient.ConnectionType} mode data transfer for LIST", CommandName);
         }
         else
         {
-            LogError(FtpStatusCode.ActionNotTakenFileUnavailable, "Requested file action not taken.");
             throw new FtpException(FtpStatusCode.ActionNotTakenFileUnavailable, "Requested file action not taken.");
         }
     }
@@ -41,11 +38,9 @@ public class ListCommand(ILogger logger) : FtpCommandBase(logger)
             {
                 IDirectoryEntry d = await user.Filesystem.GetDirectoryInfo(directory);
 
-                string date = d.LastWriteTime < DateTime.Now - TimeSpan.FromDays(180) ?
-                    d.LastWriteTime.ToString("MMM dd  yyyy") :
-                    d.LastWriteTime.ToString("MMM dd HH:mm");
+                var directoryName = GetLastFolder(d.Name);
 
-                writer.WriteLine($"{d.Permissions} 1 FTP FTP 0 {date} /{directory}");
+                writer.WriteLine($"{d.Permissions} 1 FTP FTP 0 {d.LastWriteTime:MMM dd HH:mm} {directoryName}");
                 writer.Flush();
             }
 
@@ -53,15 +48,16 @@ public class ListCommand(ILogger logger) : FtpCommandBase(logger)
             {
                 var f = await user.Filesystem.GetFileInfo(file);
 
-                string date = f.LastWriteTime < DateTime.Now - TimeSpan.FromDays(180) ?
-                    f.LastWriteTime.ToString("MMMdd yyyy") :
-                    f.LastWriteTime.ToString("MMMddHH:mm");
-
-                writer.WriteLine($"{user.Filesystem.GetFilePermissions(file, user.Identity)} 1 FTP FTP {f.Length} {date} {f.Name}");
+                writer.WriteLine($"{f.Permissions} 1 FTP FTP {f.Length} {f.LastWriteTime:MMM dd HH:mm} {f.Name}");
                 writer.Flush();
             }
         }
-        LogInformation(FtpStatusCode.ClosingData, "Transfer complete.");
-        user.SendResponse(FtpStatusCode.ClosingData, "Transfer complete.");
+        user.SendResponse(FtpStatusCode.ClosingData, $"Transfer complete.", CommandName);
     }
+
+    private static string GetLastFolder(string fullPath) 
+    {
+        var slashIndex = fullPath.LastIndexOf('/');
+        return slashIndex >= 0 ? fullPath.Substring(slashIndex + 1) : fullPath;
+    } 
 }

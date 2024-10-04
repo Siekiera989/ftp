@@ -2,11 +2,10 @@
 using Ftp.Command.Abstract;
 using Ftp.Core.Connection;
 using Ftp.Core.Exceptions;
-using Serilog;
 
 namespace Ftp.Command;
 
-public class SizeCommand(ILogger logger) : FtpCommandBase(logger)
+public class SizeCommand() : FtpCommandBase()
 {
     public override string CommandName => "SIZE";
 
@@ -16,12 +15,10 @@ public class SizeCommand(ILogger logger) : FtpCommandBase(logger)
         if (user.Filesystem.FileExists(path))
         {
             var data = user.Filesystem.GetFileInfo(path).Result;
-            user.SendResponse(FtpStatusCode.FileStatus, data.Length.ToString());
-            LogInformation(FtpStatusCode.FileStatus, data.Length.ToString());
+            user.SendResponse(FtpStatusCode.FileStatus, data.Length.ToString(), CommandName);
         }
         else
         {
-            LogError(FtpStatusCode.ActionNotTakenFileUnavailable, "File not found.");
             throw new FtpException(FtpStatusCode.ActionNotTakenFileUnavailable, "File not found.");
         }
     }

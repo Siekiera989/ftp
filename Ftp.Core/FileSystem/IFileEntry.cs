@@ -22,5 +22,5 @@ public interface IFileEntry
     //     Gets the time of creation.
     DateTimeOffset CreatedTime { get; }
 
-    long Length { get; set; }
+    long Length { get; }
 }

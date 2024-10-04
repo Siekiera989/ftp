@@ -7,10 +7,11 @@ using Ftp.Core.Enums;
 using Ftp.Core.Connection;
 using Ftp.Core.Exceptions;
 using Ftp.Core.Identity;
+using Serilog;
 
 namespace Ftp.Host;
 
-public class FtpConnection(FtpHost host, TcpClient client) : FtpConnectionBase, IDisposable
+public class FtpConnection(FtpHost host, TcpClient client, ILogger logger) : FtpConnectionBase, IDisposable
 {
     /// <summary>
     /// The client's user identity, or null if the client is not logged in.
@@ -56,16 +57,18 @@ public class FtpConnection(FtpHost host, TcpClient client) : FtpConnectionBase, 
     private StreamWriter ControlWriter;
     private StreamReader ControlReader;
     private bool _disposedValue;
+    private readonly ILogger _logger = logger;
 
-    public override void SendResponse(int code, string data)
+    public override void SendResponse(int code, string data, string commandType)
     {
+        _logger.Information("[{FtpCode}][{commandType}] {data}", code, commandType, data);
         ControlWriter.WriteLine(code + " " + data);
         ControlWriter.Flush();
     }
 
-    public override void SendResponse(FtpStatusCode code, string data)
+    public override void SendResponse(FtpStatusCode code, string data, string commandType)
     {
-        this.SendResponse((int)code, data);
+        this.SendResponse((int)code, data, commandType);
     }
 
     public override async Task Start()
@@ -102,7 +105,7 @@ public class FtpConnection(FtpHost host, TcpClient client) : FtpConnectionBase, 
         using (ControlWriter = new StreamWriter(ControlClientStream, Encoding.ASCII))
         using (ControlReader = new StreamReader(ControlClientStream, Encoding.ASCII))
         {
-            SendResponse(220, "Service ready for new user.");
+            SendResponse(220, "Service ready for new user.", "");
             string line;
             while (!string.IsNullOrEmpty(line = await GetNextLine(token)))
             {
@@ -129,11 +132,11 @@ public class FtpConnection(FtpHost host, TcpClient client) : FtpConnectionBase, 
                 }
                 catch (FtpException e)
                 {
-                    SendResponse(e.StatusCode, e.Message);
+                    SendResponse(e.StatusCode, e.Message, "");
                 }
                 catch (Exception)
                 {
-                    SendResponse(FtpStatusCode.ActionAbortedLocalProcessingError, "Internal server error.");
+                    SendResponse(FtpStatusCode.ActionAbortedLocalProcessingError, "Internal server error.", "");
                 }
             }
         }

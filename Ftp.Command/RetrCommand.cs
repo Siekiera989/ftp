@@ -5,11 +5,10 @@ using Ftp.Command.Abstract;
 using Ftp.Core.Connection;
 using Ftp.Core.Enums;
 using Ftp.Core.Exceptions;
-using Serilog;
 
 namespace Ftp.Command;
 
-public class RetrCommand(ILogger logger) : FtpCommandBase(logger)
+public class RetrCommand() : FtpCommandBase()
 {
     public override string CommandName => "RETR";
 
@@ -19,13 +18,11 @@ public class RetrCommand(ILogger logger) : FtpCommandBase(logger)
         if (user.Filesystem.FileExists(arguments))
         {
             ExecuteAsync(user, arguments);
-            user.SendResponse(FtpStatusCode.OpeningData, $"Opening {user.DataClient} mode data transfer for RETR");
-            LogInformation(FtpStatusCode.OpeningData, $"Opening {user.DataClient} mode data transfer for RETR");
+            user.SendResponse(FtpStatusCode.OpeningData, $"[{CommandName}] Opening {user.DataClient} mode data transfer for RETR", CommandName);
         }
         else
         {
-            LogError(FtpStatusCode.ActionNotTakenFileUnavailable, "Requested file action not taken.");
-            throw new FtpException(FtpStatusCode.ActionNotTakenFileUnavailable, "Requested file action not taken.");
+            throw new FtpException(FtpStatusCode.ActionNotTakenFileUnavailable, $"[{CommandName}] Requested file action not taken.");
         }
     }
 
@@ -36,19 +33,16 @@ public class RetrCommand(ILogger logger) : FtpCommandBase(logger)
         if (user.TransferType == TransferMode.ASCII)
         {
             await CopyStreamAsciiAsync(stream, client.GetStream(), 81920);
-            user.SendResponse(FtpStatusCode.ClosingData, "Closing data connection, file transfer successful.");
-            LogInformation(FtpStatusCode.ClosingData, "Closing data connection, file transfer successful.");
+            user.SendResponse(FtpStatusCode.ClosingData, $"Closing data connection, file transfer successful.", CommandName);
         }
         else if (user.TransferType == TransferMode.Binary)
         {
             await stream.CopyToAsync(client.GetStream());
-            user.SendResponse(FtpStatusCode.ClosingData, "Closing data connection, file transfer successful.");
-            LogInformation(FtpStatusCode.ClosingData, "Closing data connection, file transfer successful.");
+            user.SendResponse(FtpStatusCode.ClosingData, $"Closing data connection, file transfer successful.", CommandName);
         }
         else
         {
-            LogInformation(FtpStatusCode.CommandNotImplemented, "Unsupported transfer mode.");
-            throw new FtpException(FtpStatusCode.CommandNotImplemented, "Unsupported transfer mode.");
+            throw new FtpException(FtpStatusCode.CommandNotImplemented, $"[{CommandName}] Unsupported transfer mode.");
         }
     }
 

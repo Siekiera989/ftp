@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Diagnostics;
+using System.Net;
 using System.Net.Sockets;
 
 namespace Ftp.Core.Connection;
@@ -8,6 +9,7 @@ namespace Ftp.Core.Connection;
 /// </summary>
 public class PassiveDataConnector : IDataConnector
 {
+    public string ConnectionType => "Passive connection";
     /// <summary>
     /// The current <see cref="TcpListener"/> used to listen for incoming passive data connections.
     /// </summary>

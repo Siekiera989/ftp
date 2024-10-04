@@ -30,7 +30,7 @@ public class LoggerModule : Module
             return logger;
         })
             .As<ILogger>()
-            .InstancePerLifetimeScope();
+            .InstancePerDependency();
 
         //builder.Register(ctx =>
         //{
@@ -85,6 +85,6 @@ public class LoggerModule : Module
     [Conditional("DEBUG")]
     public static void AddDebugSinks(LoggerConfiguration configuration, IServiceInstanceContext instanceContext)
     {
-        configuration.WriteTo.Console(theme: AnsiConsoleTheme.Literate, outputTemplate: "[{Timestamp:HH:mm:ss}][{Level:u3}][{SourceContext}] {Message:lj}{NewLine}{Exception}");
+        configuration.WriteTo.Console(theme: AnsiConsoleTheme.Literate);
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Ftp.Core.FileSystem;
 
-namespace Ftp.FileSystem.AzureStorageAccount;
+namespace Ftp.FileSystem.AzureStorageAccount.Model;
 
 public class StorageAccountFileEntry : IFileEntry
 {

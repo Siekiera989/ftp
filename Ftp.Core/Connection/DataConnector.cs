@@ -7,6 +7,7 @@ namespace Ftp.Core.Connection;
 /// </summary>
 public interface IDataConnector : IDisposable
 {
+    public string ConnectionType { get; }
     /// <summary>
     /// Creates a new data connection.
     /// </summary>

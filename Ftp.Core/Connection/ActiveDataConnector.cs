@@ -8,6 +8,8 @@ namespace Ftp.Core.Connection;
 /// </summary>
 public class ActiveDataConnector : IDataConnector
 {
+    public string ConnectionType => "Active connection";
+
     /// <summary>
     /// The endpoint to connect to when creating data connections.
     /// </summary>
