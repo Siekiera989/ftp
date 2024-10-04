@@ -10,6 +10,6 @@ public class PwdCommand() : FtpCommandBase()
 
     public override void Execute(FtpConnectionBase user, string arguments)
     {
-        user.SendResponse(FtpStatusCode.PathnameCreated, $"\"" + user.CurrentDirectory + "\" is current directory.", CommandName);
+        user.SendResponse(FtpStatusCode.PathnameCreated, $"{user.CurrentDirectory} is current directory.", CommandName);
     }
 }

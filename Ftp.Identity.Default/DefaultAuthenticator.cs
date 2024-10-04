@@ -13,6 +13,7 @@ public class DefaultAuthenticator(ILogger logger, BlobContainerClient blobContai
 
     public IFtpIdentity AuthenticateUser(string username, string password) 
     {
+        
         return new DefaultIdentity(username, _logger, _blobContainerClient, _dataLakeFileSystem);
     }
 }

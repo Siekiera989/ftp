@@ -39,6 +39,8 @@ public class StorCommand() : FtpCommandBase()
         else if (user.TransferType == TransferMode.Binary)
         {
             await client.GetStream().CopyToAsync(stream);
+            stream.Position = 0;
+            await user.Filesystem.CreateFile(path, stream);
             user.SendResponse(FtpStatusCode.ClosingData, "Closing data connection, file transfer successful.", CommandName);
         }
         else

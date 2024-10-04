@@ -57,22 +57,6 @@ public interface IFtpFilesystem
     Task<Stream> GetFileStreamAsync(string path);
 
     /// <summary>
-    /// Gets the permission listing for the specified file, relative to the current user.
-    /// </summary>
-    /// <param name="path">The path of the file to get information about.</param>
-    /// <param name="identity">The identity of the current user.</param>
-    /// <returns>A unix-formatted permission string.</returns>
-    string GetFilePermissions(string path, IFtpIdentity identity);
-
-    /// <summary>
-    /// Gets the permission listing for the specified directory, relative to the current user.
-    /// </summary>
-    /// <param name="path">The path of the directory to get information about.</param>
-    /// <param name="identity">The identity of the current user.</param>
-    /// <returns>A unix-formatted permission string.</returns>
-    string GetDirectoryPermissions(string path, IFtpIdentity identity);
-
-    /// <summary>
     /// Deletes a file.
     /// </summary>
     /// <param name="path">The path of the file to delete.</param>

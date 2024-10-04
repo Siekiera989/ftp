@@ -9,5 +9,6 @@ namespace Ftp.Identity.Default;
 
 public class DefaultIdentity(string username, ILogger logger, BlobContainerClient blobContainerClient, DataLakeFileSystemClient dataLakeFileSystem) : IFtpIdentity
 {
-    public IFtpFilesystem Filesystem { get; set; } = new StorageAccountFileSystem(blobContainerClient, dataLakeFileSystem, username, logger);
+    public string Username { get; } = username;
+    public IFtpFilesystem Filesystem { get; set; } = new AzureDataLakeFtpFilesystem(dataLakeFileSystem, username, logger);
 }

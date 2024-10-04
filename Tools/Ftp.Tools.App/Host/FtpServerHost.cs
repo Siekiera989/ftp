@@ -28,7 +28,7 @@ public class FtpServerHost : BaseServerHost
 
     public override async Task Run(CancellationToken token)
     {
-        await ServerHost.Run(Container, token).ConfigureAwait(false);
+        ServerHost.Run(Container, token).ConfigureAwait(false);
     }
 }
     
