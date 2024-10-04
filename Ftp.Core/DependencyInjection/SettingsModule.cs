@@ -22,10 +22,14 @@ public class SettingsModule : Module
         var loggerSettings = config.GetSettings<LoggerSettings>();
         var storageAccountSettings = config.GetSettings<StorageAccountSettings>();
         var passiveConnectionSettings = config.GetSettings<PassiveConnectionSettings>();
+        var keyVaultSettings = config.GetSettings<KeyVaultSettings>();
+        var authenticationSettings = config.GetSettings<AuthenticationSettings>();
 
         builder.Register(x => serverSettings).AsImplementedInterfaces();
         builder.Register(x => loggerSettings).AsImplementedInterfaces();
         builder.Register(x => storageAccountSettings).AsImplementedInterfaces();
         builder.Register(x => passiveConnectionSettings).AsImplementedInterfaces();
+        builder.Register(x => keyVaultSettings).AsImplementedInterfaces();
+        builder.Register(x => authenticationSettings).AsImplementedInterfaces();
     }
 }

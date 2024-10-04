@@ -10,6 +10,7 @@ using Ftp.Command.Abstract;
 using Ftp.Identity.Default;
 using Ftp.Command.DependencyInjection;
 using Microsoft.ApplicationInsights;
+using Ftp.Identity.KeyVault.DependencyInjection;
 
 namespace Ftp.Host;
 
@@ -40,6 +41,7 @@ public class FtpHost : BaseServerHost
         builder.RegisterCoreModule();
         builder.RegisterModule<StorageAccountModule>();
         builder.RegisterModule<DefaultIdentityModule>();
+        builder.RegisterModule<KeyVaultModule>();
         builder.RegisterModule<CommandModule>();
 
         return builder;
@@ -85,7 +87,8 @@ public class FtpHost : BaseServerHost
 
     private void ConfigureServer(IContainer container)
     {
-        Authenticator = container.Resolve<IFtpAuthenticator>();
+        var membershipProvider = container.Resolve<IAuthenticationSettings>().MembershipProvider;
+        Authenticator = container.ResolveKeyed<IFtpAuthenticator>(membershipProvider);
         Logger = container.Resolve<ILogger>();
         //Client = container.Resolve<TelemetryClient>();
     }

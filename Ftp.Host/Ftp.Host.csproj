@@ -10,6 +10,7 @@
     <ProjectReference Include="..\Ftp.Core\Ftp.Core.csproj" />
     <ProjectReference Include="..\Ftp.FileSystem.AzureStorageAccount\Ftp.FileSystem.AzureStorageAccount.csproj" />
     <ProjectReference Include="..\Ftp.Identity.Default\Ftp.Identity.Default.csproj" />
+    <ProjectReference Include="..\Ftp.Identity.KeyVault\Ftp.Identity.KeyVault.csproj" />
   </ItemGroup>
 
 </Project>
