@@ -22,7 +22,7 @@ public class LoggerModule : Module
         {
             var loggerSettings = c.Resolve<ILoggerSettings>();
             var serviceContext = c.Resolve<IServiceInstanceContext>();
-            //var telemetryClient = c.Resolve<TelemetryClient>();
+            var telemetryClient = c.Resolve<TelemetryClient>();
 
             var logger = GetDefaultLoggerConfiguration(loggerSettings, serviceContext, null)
                 .CreateLogger();
@@ -32,19 +32,19 @@ public class LoggerModule : Module
             .As<ILogger>()
             .InstancePerDependency();
 
-        //builder.Register(ctx =>
-        //{
-        //    var context = ctx.Resolve<IServiceInstanceContext>();
-        //    var settings = ctx.Resolve<ILoggerSettings>();
+        builder.Register(ctx =>
+        {
+            var context = ctx.Resolve<IServiceInstanceContext>();
+            var settings = ctx.Resolve<ILoggerSettings>();
 
-        //    var instrumentationKey = settings.AppInsightsConnectionString;
-        //    var telemetryConfiguration = CreateTelemetryConfiguration(instrumentationKey, context);
-        //    var client = new TelemetryClient(telemetryConfiguration);
+            var instrumentationKey = settings.AppInsightsConnectionString;
+            var telemetryConfiguration = CreateTelemetryConfiguration(instrumentationKey, context);
+            var client = new TelemetryClient(telemetryConfiguration);
 
-        //    return client;
-        //})
-        //    .As<TelemetryClient>()
-        //    .SingleInstance();
+            return client;
+        })
+            .As<TelemetryClient>()
+            .SingleInstance();
     }
 
     private TelemetryConfiguration CreateTelemetryConfiguration(string instrumentationKey, IServiceInstanceContext context)
@@ -67,7 +67,7 @@ public class LoggerModule : Module
             .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
             .MinimumLevel.Is(loggerSettings.LogLevel);
 
-        //AddReleaseSinks(loggerConfig, loggerSettings.AppInsightsConnectionString, telemetryClient);
+        AddReleaseSinks(loggerConfig, loggerSettings.AppInsightsConnectionString, telemetryClient);
         AddDebugSinks(loggerConfig, instanceContext);
 
         return loggerConfig;
