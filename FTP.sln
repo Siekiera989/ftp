@@ -10,11 +10,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ftp.FileSystem.AzureStorage
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ftp.Identity.KeyVault", "Ftp.Identity.KeyVault\Ftp.Identity.KeyVault.csproj", "{C14BFE8A-7FB5-4EA0-BA7D-3BF8F96F9625}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ftp.Host", "Ftp.Host\Ftp.Host.csproj", "{B8EDA25D-79E1-4E28-8ED9-69B3A4CBED36}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ftp.Host", "Ftp.Host\Ftp.Host.csproj", "{B8EDA25D-79E1-4E28-8ED9-69B3A4CBED36}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ftp.Command", "Ftp.Command\Ftp.Command.csproj", "{0E750022-6C0B-42AC-BF09-F6EE5C9C7061}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ftp.Command", "Ftp.Command\Ftp.Command.csproj", "{0E750022-6C0B-42AC-BF09-F6EE5C9C7061}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ftp.Identity.Default", "Ftp.Identity.Default\Ftp.Identity.Default.csproj", "{89252D00-DC92-45A5-A8A9-B3AFE1DA46F2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ftp.Identity.Default", "Ftp.Identity.Default\Ftp.Identity.Default.csproj", "{89252D00-DC92-45A5-A8A9-B3AFE1DA46F2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{C67FB3EB-A314-48CE-9F7A-C6E8F02143C1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ftp.Tools.TestClient", "Tools\Ftp.Tools.TestClient\Ftp.Tools.TestClient.csproj", "{352C228A-3376-4EC3-943A-6B3A1777293E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -50,9 +54,17 @@ Global
 		{89252D00-DC92-45A5-A8A9-B3AFE1DA46F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{89252D00-DC92-45A5-A8A9-B3AFE1DA46F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{89252D00-DC92-45A5-A8A9-B3AFE1DA46F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{352C228A-3376-4EC3-943A-6B3A1777293E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{352C228A-3376-4EC3-943A-6B3A1777293E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{352C228A-3376-4EC3-943A-6B3A1777293E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{352C228A-3376-4EC3-943A-6B3A1777293E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7AA12CBB-12BD-4847-839F-19F9F0168018} = {C67FB3EB-A314-48CE-9F7A-C6E8F02143C1}
+		{352C228A-3376-4EC3-943A-6B3A1777293E} = {C67FB3EB-A314-48CE-9F7A-C6E8F02143C1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5870F681-3BB8-4881-BCB1-F84C30138878}

@@ -30,7 +30,6 @@ public class FtpHost : BaseServerHost
     private TcpListener _controlServer;
     private static readonly object Locker = new();
 
-    //protected override TelemetryClient Client { get; set; }
     protected override ILogger Logger { get; set; }
     public TelemetryClient Client { get; private set; }
 
@@ -90,7 +89,7 @@ public class FtpHost : BaseServerHost
         var membershipProvider = container.Resolve<IAuthenticationSettings>().MembershipProvider;
         Authenticator = container.ResolveKeyed<IFtpAuthenticator>(membershipProvider);
         Logger = container.Resolve<ILogger>();
-        //Client = container.Resolve<TelemetryClient>();
+        Client = container.Resolve<TelemetryClient>();
     }
 
     /// <summary>

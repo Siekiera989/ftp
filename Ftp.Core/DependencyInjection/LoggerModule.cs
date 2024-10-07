@@ -73,7 +73,7 @@ public class LoggerModule : Module
         return loggerConfig;
     }
 
-    [Conditional("RELEASE")]
+    //[Conditional("RELEASE")]
     public static void AddReleaseSinks(LoggerConfiguration configuration, string appInsightsConnectionString, TelemetryClient telemetryClient)
     {
         configuration.WriteTo.ApplicationInsights(
@@ -82,7 +82,7 @@ public class LoggerModule : Module
         );
     }
 
-    [Conditional("DEBUG")]
+    //[Conditional("DEBUG")]
     public static void AddDebugSinks(LoggerConfiguration configuration, IServiceInstanceContext instanceContext)
     {
         configuration.WriteTo.Console(theme: AnsiConsoleTheme.Literate);

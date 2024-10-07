@@ -9,6 +9,7 @@ public class CommandModule : Module
         builder.RegisterType<CwdCommand>().As<FtpCommandBase>().SingleInstance();
         builder.RegisterType<DeleCommand>().As<FtpCommandBase>().SingleInstance();
         builder.RegisterType<ListCommand>().As<FtpCommandBase>().SingleInstance();
+        builder.RegisterType<NlstCommand>().As<FtpCommandBase>().SingleInstance();
         builder.RegisterType<MkdCommand>().As<FtpCommandBase>().SingleInstance();
         builder.RegisterType<NoOpCommand>().As<FtpCommandBase>().SingleInstance();
         builder.RegisterType<PassCommand>().As<FtpCommandBase>().SingleInstance();
